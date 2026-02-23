@@ -1,7 +1,7 @@
 import subprocess
 
 def get_now_playing():
-    """현재 macOS에서 재생 중인 미디어 제목과 상태를 가져옵니다."""
+    """Fetches the currently playing media title and state from macOS."""
     swift_code = r"""
     import Foundation
     let path = "/System/Library/PrivateFrameworks/MediaRemote.framework"
@@ -17,7 +17,7 @@ def get_now_playing():
                 let title = info["kMRMediaRemoteNowPlayingInfoTitle"] as? String ?? ""
                 let artist = info["kMRMediaRemoteNowPlayingInfoArtist"] as? String ?? ""
                 
-                // 재생 속도(Playback Rate) 확인: 0.0 이면 일시정지
+                // Check Playback Rate: 0.0 means paused
                 let rate = info["kMRMediaRemoteNowPlayingInfoPlaybackRate"] as? Double ?? 0.0
                 
                 if rate == 0.0 && !title.isEmpty {

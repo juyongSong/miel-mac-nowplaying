@@ -1,12 +1,12 @@
 import requests
 import json
 
-# --- 설정 및 상수 ---
+# --- Configuration & Constants ---
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "qwen3:8b"
 
 def parse_music_info(raw_title):
-    """YouTube 스타일의 제목에서 가수와 곡명을 추출합니다."""
+    """Extracts artist and title from a YouTube-style string."""
     prompt = f"""
     Extract 'artist' and 'title' from the following YouTube title.
     Output MUST be in JSON format.
