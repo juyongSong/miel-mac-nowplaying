@@ -42,3 +42,6 @@ def get_now_playing():
         return result.stdout.strip()
     except Exception as e:
         return None
+
+if __name__ == "__main__":
+    print(get_now_playing())
