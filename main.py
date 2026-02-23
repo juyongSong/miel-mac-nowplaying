@@ -1,4 +1,4 @@
-from listener import get_now_playing
+from nowplaying import get_now_playing
 from llm_parser import parse_music_info
 
 if __name__ == "__main__":
