@@ -9,7 +9,7 @@
 
 ## 💡 배경 및 동기
 
-최근 macOS 업데이트로 인한 엄격한 권한 설정 및 API 변경으로 기존의 `nowplaying` 라이브러리가 작동하지 않을 때 사용 가능합니다.
+최근 macOS 업데이트로 인한 엄격한 권한 설정 및 API 변경으로 기존의 `nowplaying` 라이브러리가 작동하지 않을 때 사용 가능합니다. (참고: [Apple 고객지원 HT122400](https://support.apple.com/122400))
 
 이 프로젝트는 이러한 제약을 우회하기 위해 **Swift 하위 프로세스**를 통해 macOS의 `MediaRemote.framework`에 직접 접근하는 방식을 사용합니다.
 
@@ -28,6 +28,7 @@
 
 ### 필수 조건 (Prerequisites)
 - **macOS** (MediaRemote 프레임워크 사용)
+- **Xcode Command Line Tools**: Swift 코드를 실행하기 위해 필요합니다. (터미널에서 `xcode-select --install` 실행)
 - **Python 3.8+**
 
 ### Optional

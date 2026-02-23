@@ -9,7 +9,7 @@
 
 ## 💡 Background & Motivation
 
-Due to recent macOS updates introducing strict permission settings and API changes, many existing `nowplaying` libraries have stopped working properly.
+Due to recent macOS updates introducing strict permission settings and API changes, many existing `nowplaying` libraries have stopped working properly. (Ref: [Apple Support HT122400](https://support.apple.com/122400))
 
 To bypass these restrictions, this project uses a **Swift subprocess** to directly access the `MediaRemote.framework` on macOS.
 
@@ -28,6 +28,7 @@ To bypass these restrictions, this project uses a **Swift subprocess** to direct
 
 ### Prerequisites
 - **macOS** (Requires MediaRemote framework)
+- **Xcode Command Line Tools**: Required to execute Swift code. (Run `xcode-select --install` in terminal)
 - **Python 3.8+**
 
 ### Optional
