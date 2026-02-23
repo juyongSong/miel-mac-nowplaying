@@ -11,17 +11,16 @@
 
 Due to recent macOS updates introducing strict permission settings and API changes, many existing `nowplaying` libraries have stopped working properly.
 
-To bypass these restrictions, this project uses a **Swift subprocess** to directly access the `MediaRemote.framework` on macOS. Furthermore, instead of using fragile Regex rules to clean up unstructured data like YouTube titles (e.g., `Artist - Topic - Title`), it leverages a **Local LLM** to accurately separate the artist and track name.
+To bypass these restrictions, this project uses a **Swift subprocess** to directly access the `MediaRemote.framework` on macOS.
 
 ## ✨ Features
 
 - **macOS Sequoia Compatible:** Reliably reads the playback status from the system Notification Center, supporting the latest macOS versions.
-- **Local LLM Parsing:** Uses Ollama (e.g., Qwen, Llama 3) to refine data, ensuring **zero cost** and **privacy protection** without external API calls.
-- **Modular Architecture:** Data collection (`listener.py`) and parsing (`llm_parser.py`) are separated for easy maintenance and scalability.
+- **Local LLM Parsing:** Uses Ollama (e.g., Qwen3) to refine data.
 
 ## 📂 Project Structure
 
-- `listener.py`: Executes Swift code to fetch the raw playback information (or paused state) from macOS `MediaRemote`.
+- `nowplaying.py`: Executes Swift code to fetch the raw playback information (or paused state) from macOS `MediaRemote`.
 - `llm_parser.py`: Sends the collected string to the Ollama API and converts it into a JSON containing `artist` and `title`.
 - `main.py`: The entry point that orchestrates the entire flow.
 
@@ -30,6 +29,8 @@ To bypass these restrictions, this project uses a **Swift subprocess** to direct
 ### Prerequisites
 - **macOS** (Requires MediaRemote framework)
 - **Python 3.8+**
+
+### Optional
 - **[Ollama](https://ollama.com/)**: Must be installed to run the local LLM.
   - Default model is configured as `qwen3:8b` (Changeable).
 
@@ -53,6 +54,17 @@ To bypass these restrictions, this project uses a **Swift subprocess** to direct
 
 ### Usage
 
+#### 1. Standalone Execution (Raw data only, no LLM)
+To quickly check the raw text of the currently playing track without Ollama, run `nowplaying.py` directly.
+```bash
+python3 nowplaying.py
+```
+Example Output:
+```text
+Billie Joe Armstrong, Norah Jones(노라 존스) - Put My Little Shoes Away
+```
+
+#### 2. Execution with LLM Parsing (Requires Ollama)
 1. **Start Ollama Server:**
    Run the Ollama app or execute `ollama serve` in your terminal to ensure the API is running in the background.
 
@@ -66,11 +78,11 @@ To bypass these restrictions, this project uses a **Swift subprocess** to direct
    When music is playing:
    ```text
    🔍 Checking current playback info...
-   🎵 Raw Data: NewJeans - OMG
+   🎵 Raw Data: Billie Joe Armstrong, Norah Jones(노라 존스) - Put My Little Shoes Away
    🤖 AI is refining the information...
    ------------------------------
-   ✅ Artist: NewJeans
-   ✅ Title: OMG
+   ✅ Artist: Billie Joe Armstrong, Norah Jones
+   ✅ Title: Put My Little Shoes Away
    ------------------------------
    ```
 

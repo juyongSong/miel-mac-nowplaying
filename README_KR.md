@@ -9,19 +9,18 @@
 
 ## 💡 배경 및 동기
 
-최근 macOS 업데이트로 인한 엄격한 권한 설정 및 API 변경으로 기존의 많은 `nowplaying` 라이브러리들이 제대로 작동하지 않는 문제가 발생했습니다.
+최근 macOS 업데이트로 인한 엄격한 권한 설정 및 API 변경으로 기존의 `nowplaying` 라이브러리가 작동하지 않을 때 사용 가능합니다.
 
-이 프로젝트는 이러한 제약을 우회하기 위해 **Swift 하위 프로세스**를 통해 macOS의 `MediaRemote.framework`에 직접 접근하는 방식을 사용합니다. 또한, 유튜브 제목(예: `Artist - Topic - Title`)과 같이 정형화되지 않은 데이터를 정규식(Regex) 대신 **로컬 LLM**을 사용하여 정확하게 아티스트와 곡명으로 분리합니다.
+이 프로젝트는 이러한 제약을 우회하기 위해 **Swift 하위 프로세스**를 통해 macOS의 `MediaRemote.framework`에 직접 접근하는 방식을 사용합니다.
 
 ## ✨ 주요 기능
 
 - **macOS Sequoia 호환:** 최신 macOS에서도 시스템 알림 센터 상태를 읽어 현재 재생 정보를 안정적으로 가져옵니다.
-- **로컬 LLM 파싱:** Ollama(예: Qwen, Llama 3 등)를 사용하여 데이터를 정제하므로 외부 API 호출 없이 **무료**이며 **개인정보**가 보호됩니다.
-- **모듈형 구조:** 데이터 수집(`listener.py`)과 파싱(`llm_parser.py`)이 분리되어 있어 유지보수 및 확장이 용이합니다.
+- **로컬 LLM 파싱:** Ollama(예: Qwen3 등)를 사용할 수 있습니다.
 
 ## 📂 프로젝트 구조
 
-- `listener.py`: Swift 코드를 실행하여 macOS `MediaRemote`로부터 원본 재생 정보(또는 정지 상태)를 가져옵니다.
+- `nowplaying.py`: Swift 코드를 실행하여 macOS `MediaRemote`로부터 원본 재생 정보(또는 정지 상태)를 가져옵니다.
 - `llm_parser.py`: 수집된 문자열을 Ollama API로 전송하여 `artist`, `title`이 포함된 JSON으로 변환합니다.
 - `main.py`: 전체 흐름을 제어하는 진입점입니다.
 
@@ -30,6 +29,8 @@
 ### 필수 조건 (Prerequisites)
 - **macOS** (MediaRemote 프레임워크 사용)
 - **Python 3.8+**
+
+### Optional
 - **[Ollama](https://ollama.com/)**: 로컬 LLM 실행을 위해 설치되어 있어야 합니다.
   - 기본 모델로 `qwen3:8b`를 사용하도록 설정되어 있습니다. (변경 가능)
 
@@ -53,6 +54,17 @@
 
 ### 사용법 (Usage)
 
+#### 1. 단독 실행 (LLM 없이 원본 데이터만 확인)
+Ollama 없이 현재 재생 중인 곡의 원본 텍스트만 빠르게 확인하려면 `nowplaying.py`를 직접 실행합니다.
+```bash
+python3 nowplaying.py
+```
+출력 예시:
+```text
+Billie Joe Armstrong, Norah Jones(노라 존스) - Put My Little Shoes Away
+```
+
+#### 2. LLM 파싱 포함 실행 (Ollama 필요)
 1. **Ollama 서버 실행:**
    Ollama 앱을 실행하거나 터미널에서 `ollama serve`를 실행하여 백그라운드에서 API가 동작하도록 합니다.
 
@@ -65,19 +77,19 @@
    
    음악이 재생 중일 때:
    ```text
-   🔍 현재 재생 중인 곡 정보를 확인합니다...
-   🎵 원본 데이터: NewJeans - OMG
-   🤖 AI가 정보를 정제 중입니다...
+   🔍 Checking current playback info...
+   🎵 Raw Data: Billie Joe Armstrong, Norah Jones(노라 존스) - Put My Little Shoes Away
+   🤖 AI is refining the information...
    ------------------------------
-   ✅ 가수: NewJeans
-   ✅ 제목: OMG
+   ✅ Artist: Billie Joe Armstrong, Norah Jones
+   ✅ Title: Put My Little Shoes Away
    ------------------------------
    ```
 
    일시정지 상태일 때:
    ```text
-   🔍 현재 재생 중인 곡 정보를 확인합니다...
-   ⏸️ 음악이 일시정지 상태입니다. (LLM 요청을 건너뜁니다)
+   🔍 Checking current playback info...
+   ⏸️ Music is paused. (Skipping LLM request)
    ```
 
 ## ⚙️ 설정 (Configuration)
